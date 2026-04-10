@@ -1,48 +1,608 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YMZYL Content Tool</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .btn-white {
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+        }
+        
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .feature-card p {
+            color: #666;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 80px 0;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
             color: #333;
         }
-        h1 {
-            color: #000;
-            border-bottom: 2px solid #fe2c55;
-            padding-bottom: 10px;
+        
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
         }
-        h2 {
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+        }
+        
+        .close-btn:hover {
             color: #333;
-            margin-top: 30px;
         }
-        a {
-            color: #fe2c55;
+        
+        .form-footer {
+            margin-top: 1rem;
+            color: #666;
+        }
+        
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>YMZYL Content Tool</h1>
-    <p>YMZYL Content Tool is a personal content creation tool designed to help creators automatically publish AI-generated short video content to their personal TikTok accounts.</p>
-    
-    <h2>Features</h2>
-    <ul>
-        <li>AI video generation using HeyGen API</li>
-        <li>Automatic subtitle addition</li>
-        <li>Background music integration</li>
-        <li>Multi-platform publishing support</li>
-    </ul>
-    
-    <h2>Privacy & Terms</h2>
-    <ul>
-        <li><a href="./terms-of-service.html">Terms of Service</a></li>
-        <li><a href="./privacy-policy.html">Privacy Policy</a></li>
-    </ul>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">🎬 YMZYL</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#" onclick="openModal('loginModal')">Login</a>
+                <a href="#" class="btn btn-primary" onclick="openModal('registerModal')">Sign Up</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>YMZYL Content Tool</h1>
+            <p>A personal content creation tool designed to help creators automatically publish AI-generated short video content to their personal TikTok accounts.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-white" onclick="openModal('registerModal')">Get Started Free</a>
+                <a href="#features" class="btn btn-outline" style="color: white; border-color: white;">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Features</h2>
+            <p class="section-subtitle">Everything you need to create and publish content</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Video Generation</h3>
+                    <p>Generate videos using HeyGen API with realistic avatars and voices</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Auto Subtitles</h3>
+                    <p>Automatic subtitle addition for better accessibility and engagement</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Background Music</h3>
+                    <p>Integrated background music to enhance your video content</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>TikTok Publishing</h3>
+                    <p>One-click publishing to your personal TikTok account via official API</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Multi-Platform</h3>
+                    <p>Support for multiple platforms and content formats</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast & Easy</h3>
+                    <p>Streamlined workflow for quick content creation and publishing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard-preview" id="dashboard">
+        <div class="container">
+            <h2 class="section-title">Your Dashboard</h2>
+            <p class="section-subtitle">Manage all your content in one place</p>
+            
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-avatar">👤</div>
+                        <div>
+                            <div style="font-weight: bold;">Welcome back!</div>
+                            <div style="color: #666; font-size: 0.9rem;">Creator Account</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">+ New Video</button>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Videos Created</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Scheduled</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 1rem;">Quick Actions</div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-outline" style="font-size: 0.9rem;">Generate Video</button>
+                        <button class="btn btn-outline" style="font-size: 0.9rem;">Connect TikTok</button>
+                        <button class="btn btn-outline" style="font-size: 0.9rem;">View Analytics</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Start Creating?</h2>
+            <p>Join thousands of creators using YMZYL to streamline their content workflow</p>
+            <a href="#" class="btn btn-white" onclick="openModal('registerModal')">Create Free Account</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 YMZYL Content Tool. All rights reserved.</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="privacy-policy.html">Privacy Policy</a> | 
+                <a href="terms-of-service.html">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            <h2>Welcome Back</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <div class="form-footer">
+                Don't have an account? <a href="#" onclick="closeModal('loginModal'); openModal('registerModal')">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
+            <h2>Create Account</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create password (min 6 characters)" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+            <div class="form-footer">
+                Already have an account? <a href="#" onclick="closeModal('registerModal'); openModal('loginModal')">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            alert('Login functionality - Demo version. Full authentication will be available after TikTok API approval.');
+            closeModal('loginModal');
+        }
+        
+        function handleRegister(e) {
+            e.preventDefault();
+            alert('Registration functionality - Demo version. Full authentication will be available after TikTok API approval.');
+            closeModal('registerModal');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
 </body>
 </html>
